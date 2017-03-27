@@ -13,17 +13,23 @@ var http = require('http'); //Http library
 var fs = require('fs'); //Library to access Filesystem
 var url = require('url'); //URL library
 var port = 3433; //Listening port
+var db = new sqlite3.Database('scrumtastic.sqlite3', function(err){
+	if(err){
+		console.log(err);
+	}
+});
+var router = require('./lib/route').Router(db);
 
 /*load cahced files */
 var config = JSON.parse(fs.readFileSync('config.json')); //Loads config file
-var stylesheet = fs.readFileSync('public/stylesheets/catalog.css'); //Load in css stylesheet
-var treeStyle = fs.readFileSync('public/stylesheets/trees.css');
+var stylesheet = fs.readFileSync('info/stylesheets/catalog.css'); //Load in css stylesheet
+var treeStyle = fs.readFileSync('info/stylesheets/trees.css');
 
 template.loadDir('templates');
 
 /*Variable to store JSON files and call loadJSONDir to get files*/
 var jsonfiles = {};
-loadJSONDir('public/JSON');
+loadJSONDir('info/JSON');
 
 /** @function loadJSONDir
 * Loads directory of JSON files from public and parses them
@@ -75,7 +81,7 @@ function buildCatalog(imageTags) {
  * @param {http.serverResponse} - the response object
  */
 function serveImage(fileName, req, res){
-	fs.readFile('public/images/' + decodeURIComponent(fileName), function(err, data){
+	fs.readFile('info/images/' + decodeURIComponent(fileName), function(err, data){
 			if(err){
 				console.error(err);
 				res.statusCode = 404;
@@ -94,7 +100,7 @@ function serveImage(fileName, req, res){
 * and array of filenames as parameters
 */
 function getTreeImage(callback){
-	fs.readdir('public/images/', function(err, filename){
+	fs.readdir('info/images/', function(err, filename){
 		if(err){
 			callback(err, undefined);
 		}
@@ -110,7 +116,7 @@ function getTreeImage(callback){
 * and array of filenames as parameters
 */
 function getJSON(callback){
-	fs.readdir('public/JSON/', function(err, filename){
+	fs.readdir('info/JSON/', function(err, filename){
 		if(err){
 			callback(err, undefined);
 		}
@@ -189,7 +195,7 @@ function uploadJSONData(req, res){
 			description: req.body.description
 		};
 		var jsonImage = req.body.image.filename.split('.')[0];
-		fs.writeFile("public/JSON/" + jsonImage	+ ".json", JSON.stringify(jsonData));
+		fs.writeFile("info/JSON/" + jsonImage	+ ".json", JSON.stringify(jsonData));
 		jsonfiles[jsonImage] = jsonData;
 		uploadImage(req, res);
 	});
@@ -202,7 +208,7 @@ function uploadJSONData(req, res){
  * @param {http.serverResponse} res - the response object
  */
 function uploadImage(req, res) {
-  fs.writeFile('public/images/' + req.body.image.filename, req.body.image.data, function(err){
+  fs.writeFile('info/images/' + req.body.image.filename, req.body.image.data, function(err){
     if(err) {
       console.error(err);
       res.statusCode = 500;
@@ -237,11 +243,11 @@ function handleRequest(req, res) {
 				uploadJSONData(req, res);
 			}
       break;
-    case '/public/stylesheets/catalog.css':
+    case '/info/stylesheets/catalog.css':
       res.setHeader('Content-Type', 'text/css');
       res.end(stylesheet);
       break;
-		case '/public/stylesheets/trees.css':
+		case '/info/stylesheets/trees.css':
 			res.setHeader('Content-Type', 'text/css');
 			res.end(treeStyle);
 			break;
