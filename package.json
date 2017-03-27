@@ -1,0 +1,30 @@
+{
+  "name": "onepagecatalog",
+  "version": "1.0.0",
+  "description": "A single page catalog of trees",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bates829/One-Page-Catalog.git"
+  },
+  "keywords": [
+    "Catalog",
+    "Node.js",
+    "AJAX",
+    "RESTful",
+    "CRUD"
+  ],
+  "author": "Ryan E. Bates",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bates829/One-Page-Catalog/issues"
+  },
+  "homepage": "https://github.com/Bates829/One-Page-Catalog#readme",
+  "dependencies": {
+    "sqlite3": "3.1.8"
+  }
+}
