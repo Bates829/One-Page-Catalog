@@ -6,14 +6,17 @@
 
 "use strict;"
 
+var PORT = 3433; //Listening port
+
 /*global varibles */
 var multipart = require('./multipart');
 var template = require('./template');
 var http = require('http'); //Http library
 var fs = require('fs'); //Library to access Filesystem
 var url = require('url'); //URL library
-var port = 3433; //Listening port
-var db = new sqlite3.Database('scrumtastic.sqlite3', function(err){
+var sqlite3 = require('sqlite3').verbose(); //sqlite3 library
+//Create database variable
+var db = new sqlite3.Database('One-Page-Catalog.sqlite3', function(err){
 	if(err){
 		console.log(err);
 	}
@@ -21,7 +24,6 @@ var db = new sqlite3.Database('scrumtastic.sqlite3', function(err){
 var router = require('./lib/route').Router(db);
 
 /*load cahced files */
-var config = JSON.parse(fs.readFileSync('config.json')); //Loads config file
 var stylesheet = fs.readFileSync('info/stylesheets/catalog.css'); //Load in css stylesheet
 var treeStyle = fs.readFileSync('info/stylesheets/trees.css');
 
@@ -263,6 +265,6 @@ function handleRequest(req, res) {
 
 /* Create and launch the webserver */
 var server = http.createServer(handleRequest);
-server.listen(port, function(){
-  console.log("Server is listening on port ", port);
+server.listen(PORT, function(){
+  console.log("Server is listening on port ", PORT);
 });
