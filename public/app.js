@@ -62,6 +62,10 @@ function loadIndex(){
           name.innerHtml = tree.name;
           name.href = "/trees/" + tree.id;
           document.body.appendChild(name);
+          project.onClick = function(event){
+            event.preventDefault();
+            loadProject("/trees/" + tree.id);
+          }
         });
       } else {
         console.log('Error: ' + xhr.status); // An error occurred during the request.
