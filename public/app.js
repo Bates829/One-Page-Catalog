@@ -1,77 +1,67 @@
-/*function loadIndex(){
-  $.get('/trees', function(trees, status){
-    if(status == 200){
-      $('body').clear();
-      trees.forEach(function(tree){
-        var link = $('a')
-        .text(tree.name)
-        .attr('href', '/trees/' + tree.id)
-        .on('click', function(e){
-          e.preventDefault();
-          loadTree('/trees/' + tree.id)
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+var tree = require('./tree');
+
+$.get('/trees', function(trees){
+  $('body').html(tree.list(trees));
+});
+
+$.get('/trees', function(trees, status){
+  if(status == "success"){
+    $('<button>').text('Add Tree').on('click', function(){
+      //Add form to the page
+      $('body').load('/public/project-form.html', function(){
+        //Overide default form action
+        $('form').on('submit', function(event){
+          event.preventDefault();
+          var data = new FormData($('form')[0]);
+          $.post({
+            url: '/trees',
+            data: data,
+            contentType: 'multipart/form-data',
+            processData: false
+          });
         });
-        $('body').append(link);
       });
-    }
-  })
-}
-*/
-
-function loadTree(url){
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url);
-  xhr.send(null);
-
-  xhr.onreadystatechange = function() {
-    var DONE = 4; //readyState 4 means the request is done
-    var OK = 200; // staus 200 is a succesful return
-    if(xhr.readyState === DONE){
-      if(xhr.status === OK){
-        console.log(xhr.responseText);
-        var tree = JSON.parse(xhr.responseText);
-        var wrapper = document.createElement('div');
-        var name = document.createElement('h1');
-        var image = document.createElement('img');
-        name.innerHtml = tree.name;
-        image.src = tree.imageSrc;
-        wrapper.appendChild(name);
-        wrapper.appendChild(image);
-        document.body.appendChild(wrapper);
-      }
-      else{
-        console.log('Error: ' + xhr.status);
-      }
-    }
+    }).appendTo('body');
   }
+});
+
+},{"./tree":2}],2:[function(require,module,exports){
+module.exports = {
+  list
+};
+
+function list(trees){
+  upload();
+  var table = $('<table>').addClass('table');
+  var head = $('<tr>').append('<th>Name</th>', '<th>Description</th>', '<th>Image</th>').appendTo(table);
+
+  trees.forEach(function(tree){
+    var row = $('<tr>').append(
+      $('<td>').text(tree.name),
+      $('<td>').text(tree.description),
+      $('<td>').append('<a href="/trees/' + tree.id + '"><img src="' + tree.image + '"/></a>')
+    ).appendTo(table);
+  });
+  return table;
 }
-
-function loadIndex(){
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/trees/');
-  xhr.send(null);
-
-  xhr.onreadystatechange = function() {
-    var DONE = 4; // readyState 4 means the request is done.
-    var OK = 200; // status 200 is a successful return.
-    if (xhr.readyState === DONE) {
-      if (xhr.status === OK) {
-        console.log(xhr.responseText); // 'This is the returned text.'
-        var trees = JSON.parse(xhr.responseText);
-        trees.forEach(function(tree){
-          var name = document.createElement('a');
-          name.innerHtml = tree.name;
-          name.href = "/trees/" + tree.id;
-          document.body.appendChild(name);
-          project.onClick = function(event){
-            event.preventDefault();
-            loadProject("/trees/" + tree.id);
-          }
+function upload(){
+  $('<button>').text('Add Tree').on('click', function(){
+    //Add form to the page
+    $('body').load('/public/project-form.html', function(){
+      //Overide default form action
+      $('form').on('submit', function(event){
+        event.preventDefault();
+        var data = new FormData($('form')[0]);
+        $.post({
+          url: '/trees',
+          data: data,
+          contentType: 'multipart/form-data',
+          processData: false
         });
-      } else {
-        console.log('Error: ' + xhr.status); // An error occurred during the request.
-      }
-    }
-  }
+      });
+    });
+  }).appendTo('body');
 }
 
-loadIndex();
+},{}]},{},[1]);

@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "migrate": "node scripts/migrate.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,8 @@
   "homepage": "https://github.com/Bates829/One-Page-Catalog#readme",
   "dependencies": {
     "sqlite3": "3.1.8"
+  },
+  "devDependencies": {
+    "browserify": "^14.1.0"
   }
 }
