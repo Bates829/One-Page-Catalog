@@ -1,12 +1,18 @@
 <form>
-  <label for="name">Name:
-    <input name="name" type="text" />
-  </label>
-  <label for="description">Description:
-    <textarea name="description"></textarea>
-  </label>
-  <label for='image'>Image:
-    <input name='image' type='file'/>
-  </label>
-  <input type='submit' value="Upload Image"/>
+  <div id="image-upload-form">
+    <h1>Upload Image</h1>
+    <label for="name">Name:
+      <input name="name" type="text"/>
+    </label>
+    <br><br>
+    <label for="description">Description:
+      <textarea name="description" rows="2" cols="50"></textarea>
+    </label>
+    <br><br>
+    <strong>Image:</strong>
+    <label for='image'>
+      <input name='image' type='file'/>
+    </label>
+    <input type='submit' value="Upload Image"/>
+</div>
 </form>
