@@ -5,13 +5,16 @@
 
 "use strict";
 
+var multipart = require('../../lib/form-multipart');
+var fs = require('fs');
+
 module.exports = {
   list: list,
   create: create,
   read: read,
   update: update,
   destroy: destroy
-};
+}
 
 
 /** @function list
@@ -36,22 +39,14 @@ module.exports = {
 * @param {sqlite3.Database} db - the database object
 */
  function create(req, res, db){
-   var body = "";
-
-   req.on("error", function(err){
-     console.error(err);
-     res.statusCode = 500;
-     res.end("Server error");
-   });
-
-   req.on("data", function(data){
-     body += data;
-   });
-
-   req.on("end", function() {
-     var tree = JSON.parse(body);
+   multipart(req, res, function(){
+     var tree = {
+       name: req.body.name,
+       description: req.body.description,
+       image: req.body.image.filename
+     };
      db.run("INSERT INTO trees (name, description, image) VALUES (?,?,?)",
-       [tree.name, tree.description, tree.image],
+       [tree.name, tree.description, '/public/images/' + tree.image],
        function(err) {
          if(err) {
            console.error(err);
@@ -63,7 +58,20 @@ module.exports = {
          res.end();
        }
      );
+     uploadImage(req, res);
    });
+   }
+
+   function uploadImage(req, res){
+     fs.writeFile('public/images/' + req.body.image.filename, req.body.image.data, function(err){
+       if(err){
+         console.error(err);
+         res.statusCode = 500;
+         res.statusMessage = "Failed to upload image";
+         res.end("Server Error");
+         return;
+       }
+     });
    }
 
 /** @function read

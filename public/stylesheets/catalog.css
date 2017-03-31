@@ -1,19 +1,7 @@
-h1 {
-  color: blue;
-}
-h2{
-  color: blue;
-  text-align: center;
-}
 img {
   width: 150px;
   height: 150px;
   border-radius: 25px;
-}
-#border{
-  border-bottom: 5px solid black;
-  width: 103%;
-  margin-left: -10px;
 }
 #image-upload-form{
   text-align: center;
@@ -22,15 +10,6 @@ img {
   background-color: white;
   padding: 10px
 }
-table{
-  text-align: center;
-}
-th{
-  align: auto;
-  font-size: 50px;
-}
-
-button{
-  margin auto;
-  display: block;
+.left-home{
+  font-size: 30px;
 }
